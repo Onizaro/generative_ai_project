@@ -5,14 +5,14 @@ import json
 COUNCIL_MEMBERS = [
     {"name": "Agent_Llama3", "url": "http://127.0.0.1:11434/api/generate", "model": "llama3"},
     {"name": "Agent_Mistral", "url": "http://127.0.0.1:11434/api/generate", "model": "mistral"},
-    {"name": "Agent_Phi3", "url": "http://127.0.0.1:11434/api/generate", "model": "phi3"}
+    {"name": "Agent_Qwen2.5:7b", "url": "http://127.0.0.1:11434/api/generate", "model": "qwen2.5:7b"}
 ]
 
 # The Chairman must run as a separate service on a dedicated machine
 CHAIRMAN = {
-    "name": "Chairman_Llama3",
+    "name": "Chairman_Phi3",
     "url": "http://127.0.0.1:11434/api/generate",
-    "model": "llama3"
+    "model": "phi3"
 }
 
 def call_local_llm(url, model, prompt):
@@ -54,9 +54,20 @@ def stage_2_review(user_query, original_responses):
         
         prompt_review = f"""
         User Query: {user_query}
-        Here are several responses from your colleagues. Analyze and rank them based on accuracy and insight.
-        Responses: {others_work}
-        Provide a concise critique.
+
+        You are given EXACTLY {len(original_responses)} responses.
+        They are labeled Response 1 to Response {len(original_responses)}.
+
+        IMPORTANT RULES:
+        - Do NOT invent additional responses.
+        - Do NOT reference any response number other than those provided.
+        - Evaluate ONLY the responses shown below.
+
+        Responses:
+        {others_work}
+
+        Task:
+        Provide a concise critique and ranking of the responses based on accuracy and insight.
         """
         
         print(f"{reviewer['name']} is reviewing the responses...")
@@ -88,7 +99,7 @@ def stage_3_chairman(user_query, responses, reviews):
 
 # --- EXECUTION ---
 if __name__ == "__main__":
-    query = "What are the advantages of a distributed system for LLMs?"
+    query = "very briefly, What are the advantages of a distributed system for LLMs?"
     
     # Stage 1: Opinions 
     first_opinions = stage_1_opinions(query)

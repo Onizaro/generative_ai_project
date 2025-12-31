@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Council - Advanced Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Theme Toggle -->
+        <header class="header">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1 class="title">LLM Council</h1>
+                    <p class="subtitle">Advanced Deliberation System</p>
+                </div>
+                <div class="header-controls">
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button id="refreshHealth" class="health-check-btn">
+                        <span>⟳</span> Health Check
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section class="dashboard">
+            <h2 class="section-title">Model Status Dashboard</h2>
+            <div id="modelDashboard" class="model-dashboard"></div>
+        </section>
+
+        <!-- Query Section -->
+        <div class="query-section">
+            <div class="input-wrapper">
+                <textarea 
+                    id="queryInput" 
+                    placeholder="Ask your question to the council..."
+                    rows="4"
+                ></textarea>
+            </div>
+            <button id="submitBtn" class="submit-btn">
+                <span class="btn-text">Start Deliberation</span>
+                <span class="btn-icon">→</span>
+            </button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p id="loadingStage">Deliberation in progress...</p>
+        </div>
+
+        <!-- Results Container -->
+        <div id="resultsContainer" class="results-container" style="display: none;">
+            
+            <!-- View Mode Selector -->
+            <div class="view-controls">
+                <div class="view-mode-selector">
+                    <button class="view-btn active" data-view="sequential">Sequential View</button>
+                    <button class="view-btn" data-view="comparison">Side-by-Side</button>
+                    <button class="view-btn" data-view="tabbed">Tabbed View</button>
+                </div>
+            </div>
+
+            <!-- Sequential View (default) -->
+            <div id="sequentialView" class="view-container active">
+                
+                <!-- Stage 1 -->
+                <section class="stage-section" id="stage1Section">
+                    <div class="stage-header">
+                        <div class="stage-header-left">
+                            <span class="stage-number">01</span>
+                            <div>
+                                <h2 class="stage-title">Initial Opinions</h2>
+                                <p class="stage-desc">Each council member responds independently</p>
+                            </div>
+                        </div>
+                        <button class="collapse-btn" data-target="stage1Content">
+                            <span>−</span>
+                        </button>
+                    </div>
+                    <div id="stage1Content" class="stage-content"></div>
+                </section>
+
+                <!-- Stage 2 -->
+                <section class="stage-section" id="stage2Section">
+                    <div class="stage-header">
+                        <div class="stage-header-left">
+                            <span class="stage-number">02</span>
+                            <div>
+                                <h2 class="stage-title">Review & Critique</h2>
+                                <p class="stage-desc">Members analyze responses anonymously</p>
+                            </div>
+                        </div>
+                        <button class="collapse-btn" data-target="stage2Content">
+                            <span>−</span>
+                        </button>
+                    </div>
+                    <div id="stage2Content" class="stage-content"></div>
+                </section>
+
+                <!-- Stage 3 -->
+                <section class="stage-section" id="stage3Section">
+                    <div class="stage-header">
+                        <div class="stage-header-left">
+                            <span class="stage-number">03</span>
+                            <div>
+                                <h2 class="stage-title">Final Synthesis</h2>
+                                <p class="stage-desc">Chairman synthesizes all contributions</p>
+                            </div>
+                        </div>
+                        <button class="collapse-btn" data-target="stage3Content">
+                            <span>−</span>
+                        </button>
+                    </div>
+                    <div id="stage3Content" class="stage-content"></div>
+                </section>
+            </div>
+
+            <!-- Comparison View -->
+            <div id="comparisonView" class="view-container">
+                <div class="comparison-grid" id="comparisonGrid"></div>
+            </div>
+
+            <!-- Tabbed View -->
+            <div id="tabbedView" class="view-container">
+                <div class="tab-navigation" id="tabNavigation"></div>
+                <div class="tab-content" id="tabContent"></div>
+            </div>
+
+        </div>
+
+        <!-- Error Container -->
+        <div id="errorContainer" class="error-container" style="display: none;">
+            <div class="error-content">
+                <h3>⚠️ Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

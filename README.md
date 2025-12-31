@@ -88,18 +88,19 @@ ollama pull phi3
 
 ### 3. Install Python dependencies
 ```
-pip install requests
+pip install -r requirements.txt
 ```
 
 ### 4. Running the Project
 ```
-python main.py
+python app.py
 ```
-The program will query each council LLM , run the review stage , and generate a final synthesized answer via the Chairman. Depending on your configuration, it can take a few minutes to finalize, ~10/12 min for me.
+The program will query each council LLM , run the review stage , and generate a final synthesized answer via the Chairman. Depending on your configuration, it can take a few minutes to finalize, between 5 and 15 min for me.
 
 ---
 
-Improvements Over Original Repository 
+## Improvements Over Original Repository 
+
 - Local-First: Removed all cloud-based API dependencies (OpenRouter/OpenAI).
 - Architecture: Implemented a distributed-ready REST architecture.
 - Strict Separation: Explicit separation of the Chairman role from the Council.
@@ -107,6 +108,12 @@ Improvements Over Original Repository
 
 ---
 
-Generative AI Usage Statement 
-- Tools Used: Gemini 3 pro
-- Purpose: Code refactoring assistance and documentation writing.
+## Generative AI Usage Statement 
+
+- Tool 1 Used: Gemini 3 pro and ChatGPT (free version)
+- Purpose: Code refactoring assistance, model selection, prompt engineering and documentation writing.
+
+- Tool 2 Used: Claude (free version)
+- Purpose: Help creating a graphical version of the initial code.
+
+
