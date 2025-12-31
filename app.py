@@ -101,7 +101,7 @@ def call_local_llm(url, model, prompt, track_metrics=True):
         if track_metrics:
             model_metrics[model]["status"] = "running"
         
-        response = requests.post(url, json=payload, timeout=300)
+        response = requests.post(url, json=payload, timeout=600)
         response.raise_for_status()
         
         end_time = time.time()
@@ -145,8 +145,24 @@ def call_local_llm(url, model, prompt, track_metrics=True):
 def stage_1_opinions(user_query):
     """Each LLM in the council generates an answer independently."""
     responses = []
+    prompt = f"""
+    You are a domain expert participating in a council.
+
+    User question:
+    {user_query}
+
+    Instructions:
+    - Provide a clear, technically accurate answer.
+    - Focus on reasoning, not verbosity.
+    - Do NOT reference other agents.
+    - Do NOT speculate beyond established knowledge.
+
+    Structure your response as:
+    1. Core answer (2–4 sentences)
+    2. Key points (bullet list, max 5 items)
+    """
     for member in COUNCIL_MEMBERS:
-        result = call_local_llm(member['url'], member['model'], user_query)
+        result = call_local_llm(member['url'], member['model'], prompt)
         responses.append({
             "author": member['name'],
             "model": member['model'],
@@ -210,9 +226,31 @@ def stage_3_chairman(user_query, responses, reviews):
         full_context += f"- {rev['review']}\n"
     
     prompt_chairman = f"""
-    You are the Chairman of the LLM Council. Here are the deliberations:
+    You are the Chairman of an expert LLM council.
+
+    User question:
+    {user_query}
+
+    You are given:
+    1. A brief summary of multiple expert responses (3–5 sentences each)
+    2. Peer reviews evaluating accuracy and insight
+
+    Your task:
+    - Identify the top 3–5 key points
+    - Resolve contradictions using the reviews
+    - Produce a single concise final answer
+
+    Rules:
+    - Do NOT mention the council, agents, or reviews
+    - Do NOT invent new information
+    - Maximum: 2 paragraphs, ~200 words
+
+    Final answer structure:
+    - Direct answer (1 paragraph)
+    - Key takeaways (3–5 bullets)
+
+    Council material summary:
     {full_context}
-    Synthesize all the above into a single, comprehensive, and accurate final response for the user.
     """
     
     result = call_local_llm(CHAIRMAN['url'], CHAIRMAN['model'], prompt_chairman)

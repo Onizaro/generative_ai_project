@@ -26,11 +26,12 @@ All models run **locally** using **Ollama**, without any cloud-based API.
 The system includes **three independent council LLMs**:
 - Llama 3
 - Mistral
-- Phi-3
+- qwen2.5:7b
 
 Each model generates its own response to the same user query.
 
 ### Chairman LLM
+- Used model: phi3
 - The Chairman is a **logically separated service**
 - It does **not** participate in the first opinion stage
 - It only synthesizes council responses and reviews
@@ -46,7 +47,7 @@ Each model generates its own response to the same user query.
 
 ### Stage 2 – Review & Ranking
 - Each LLM reviews anonymized responses from other members.
-- Reviews focus on accuracy and insight.
+- Each LLM ranks the responses based on: accuracy and insight
 - Model identities are hidden to avoid bias.
 
 ### Stage 3 – Chairman Final Answer
@@ -84,6 +85,7 @@ ollama serve
 ollama pull llama3
 ollama pull mistral
 ollama pull phi3
+ollama pull qwen2.5:7b
 ```
 
 ### 3. Install Python dependencies
@@ -91,29 +93,41 @@ ollama pull phi3
 pip install -r requirements.txt
 ```
 
-### 4. Running the Project
+### 4. Running the Web App
 ```
 python app.py
 ```
 The program will query each council LLM , run the review stage , and generate a final synthesized answer via the Chairman. Depending on your configuration, it can take a few minutes to finalize, between 5 and 15 min for me.
 
----
-
-## Improvements Over Original Repository 
-
-- Local-First: Removed all cloud-based API dependencies (OpenRouter/OpenAI).
-- Architecture: Implemented a distributed-ready REST architecture.
-- Strict Separation: Explicit separation of the Chairman role from the Council.
-- Transparency: Allows inspection of intermediate model outputs.
 
 ---
 
 ## Generative AI Usage Statement 
 
-- Tool 1 Used: Gemini 3 pro and ChatGPT (free version)
-- Purpose: Code refactoring assistance, model selection, prompt engineering and documentation writing.
-
-- Tool 2 Used: Claude (free version)
+- Tools Used: Gemini 3 pro and ChatGPT (free version)
+- Purpose: Code refactoring assistance (clean code + commentary), model selection, prompt engineering and documentation writing.
+---
+- Tool Used: Claude (free version)
 - Purpose: Help creating a graphical version of the initial code.
+
+---
+
+## Optional Enhancement Ideas (Bonus)
+- Model health checks & heartbeat monitoring
+- Token usage estimation
+- Load and availability status per model
+
+- Improved tab view:
+  - Color-coded responses
+  - Collapsible panels
+  - Side-by-side comparison
+  - Diff highlighting between outputs
+- Model performance dashboard:
+  - Latency per model and response-time tracking
+  - Ranking results
+  - Indicators for model status (running, idle, unavailable)
+- Dark / Light mode UI
+- Clear visualization of the council workflow (Stage 1 → Stage 3)
+
 
 
